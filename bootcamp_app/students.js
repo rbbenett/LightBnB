@@ -8,9 +8,11 @@ const pool = new Pool({
 });
 
 pool.query(`
-SELECT id, name, cohort_id
+SELECT students.id as student_id, students.name as name, cohorts.name as cohort
 FROM students
-LIMIT 5;
+JOIN cohorts ON cohort_id = cohorts.id
+WHERE cohorts.name LIKE '%${process.argv[2]}%'
+LIMIT ${process.argv[3] || [5]};
 `)
 .then(res => {
   console.log(res.rows);
